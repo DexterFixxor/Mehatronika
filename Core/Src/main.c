@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Periferije/GPIO/led.h"
+#include "Periferije/Timer/timer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -76,6 +77,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
   LED_Init();
+  Timer_Init();
 
   /* USER CODE END Init */
 
@@ -89,7 +91,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  __enable_irq();
   /* USER CODE END 2 */
  
  
@@ -100,7 +102,7 @@ int main(void)
   {
     /* USER CODE END WHILE */
 	  GPIOA->ODR ^= (1 << 5);
-	  HAL_Delay(500);
+	  Timer_delay(500);
 
     /* USER CODE BEGIN 3 */
   }
