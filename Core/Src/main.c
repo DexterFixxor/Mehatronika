@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "Periferije/GPIO/led.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -75,6 +75,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  LED_Init();
 
   /* USER CODE END Init */
 
@@ -98,6 +99,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	  GPIOA->ODR ^= (1 << 5);
+	  HAL_Delay(500);
 
     /* USER CODE BEGIN 3 */
   }
