@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "../Lib/periferije/io/io.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -86,13 +86,16 @@ main (void)
 
   /* Initialize all configured peripherals */
   /* USER CODE BEGIN 2 */
-
+  io_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
+  //while (1)
+  for (;;)
     {
+      io_led(true);
+
       /* USER CODE END WHILE */
 
       /* USER CODE BEGIN 3 */
