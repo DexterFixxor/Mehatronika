@@ -1,13 +1,16 @@
 /*
  * led.h
  *
- *  Created on: Oct 16, 2023
+ *  Created on: Oct 19, 2023
  *      Author: dexter
  */
 
-#ifndef LIB_PERIFERIJE_GPIO_LED_H_
-#define LIB_PERIFERIJE_GPIO_LED_H_
+#ifndef LIB_PERIPHERALS_GPIO_LED_H_
+#define LIB_PERIPHERALS_GPIO_LED_H_
 
-void LED_Init();
+#include <stm32f4xx.h>
 
-#endif /* LIB_PERIFERIJE_GPIO_LED_H_ */
+void LED_init();
+
+
+#endif /* LIB_PERIPHERALS_GPIO_LED_H_ */
