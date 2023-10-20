@@ -34,7 +34,7 @@ void TIMER_init()
 	 *
 	 * TIMER_PERIOD = 1000 - 1
 	 */
-	TIM2->PSC = 42 -1;
+	TIM2->PSC = 84 -1;
 	TIM2->ARR = 1000 - 1;
 
 	// Enable TIM2 interrupt
