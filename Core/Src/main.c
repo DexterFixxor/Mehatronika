@@ -25,6 +25,8 @@
 /* USER CODE BEGIN Includes */
 #include "Periferije/GPIO/led.h"
 #include "Periferije/Timer/timer.h"
+#include "Periferije/Encoder/encoder.h"
+#include "Moduli/Odometrija/odom.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,7 +68,8 @@ static void MX_GPIO_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	int cnt1 = 0;
+	int cnt2 = 0;
   /* USER CODE END 1 */
   
 
@@ -78,7 +81,8 @@ int main(void)
   /* USER CODE BEGIN Init */
   LED_Init();
   Timer_Init();
-
+  Encoders_Init();
+  Odom_init(0, 0, 0);
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -100,9 +104,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  //Odom_update() moved to TIM IRQ
+
     /* USER CODE END WHILE */
-	  GPIOA->ODR ^= (1 << 5);
-	  Timer_delay(500);
 
     /* USER CODE BEGIN 3 */
   }

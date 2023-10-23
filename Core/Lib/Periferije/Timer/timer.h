@@ -18,7 +18,9 @@ typedef struct
 	unsigned char flg_timeoutEnd : 1;
 }sTimerFlags_t;
 
-volatile unsigned int system_ms;
+volatile extern sTimerFlags_t timer_flags;
+volatile extern unsigned int system_ms;
+volatile extern unsigned int timeout_ms;
 
 void Timer_Init();
 
