@@ -25,6 +25,7 @@
 #include "Periferije//GPIO/led.h"
 #include "Periferije/Timer/timer.h"
 #include "Periferije/Encoder/encoder.h"
+#include "Modules/Odom/odom.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -70,6 +71,16 @@ int main(void)
 	int cntDesni, cntLevi;
 	/* USER CODE END 1 */
 
+	/*
+	 * zuti -> B
+	 * beli -> A
+	 * ljubicasti -> VCC
+	 * zeleni -> GND
+	 *
+	 * narandzasti -> B
+	 * beli -> A
+	 *
+	 */
 
 	/* MCU Configuration--------------------------------------------------------*/
 
@@ -78,8 +89,9 @@ int main(void)
 
 	/* USER CODE BEGIN Init */
 	LED_init();
-	TIMER_init();
+//	TIMER_init();
 	Encoders_Init();
+	Odom_init(0, 0, 0);
 	/* USER CODE END Init */
 
 	/* Configure the system clock */
@@ -99,10 +111,7 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		cntLevi = EncoderLeft_GetDeltaInc();
-		cntDesni = EncoderRight_GetDeltaInc();
-
-
+		Odom_update(100);
 		HAL_Delay(100);
 		/* USER CODE END WHILE */
 
