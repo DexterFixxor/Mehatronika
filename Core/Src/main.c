@@ -71,17 +71,6 @@ int main(void)
 	int cntDesni, cntLevi;
 	/* USER CODE END 1 */
 
-	/*
-	 * zuti -> B
-	 * beli -> A
-	 * ljubicasti -> VCC
-	 * zeleni -> GND
-	 *
-	 * narandzasti -> B
-	 * beli -> A
-	 *
-	 */
-
 	/* MCU Configuration--------------------------------------------------------*/
 
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
