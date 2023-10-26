@@ -6,6 +6,7 @@
  */
 
 #include "timer.h"
+#include "Modules/Odom/odom.h"
 
 volatile unsigned int system_ms = 0;
 
@@ -14,43 +15,24 @@ volatile unsigned int timeout_ms = 0;
 
 void TIMER_init()
 {
-	//Config TIM2 to work on 1kHz
+	RCC->APB2ENR |= (0b1 << RCC_APB2ENR_TIM1EN_Pos);
 
-	// Enable TIM2 clock
-	RCC->APB1ENR |= (0b1 << 0);
+	//Podesavanje preskalera i timer_period-a
+	// APB2 max 84 MHz, posto smo mi stavili max frekvenciju, na toliko nam radi i APB1
 
-	//Set TIM2 prescaler and TIMER_PERIOD (ARR)
-	// APB1 42MHz
-	/*
-	 * f_clk = 84 MHz
-	 * f_timer = 1kHz
-	 *
-	 * PSC = 84  - 1
-	 * TIMER_PERIOD = ?
-	 *
-	 *				f_clk
-	 *	f_timer = ---------------------------
-	 *				(PSC + 1) * TIMER_PERIOD
-	 *
-	 * TIMER_PERIOD = 1000 - 1
-	 */
-	TIM2->PSC = 84 -1;
-	TIM2->ARR = 1000 - 1;
+	TIM1->PSC = 84 - 1;
+	TIM1->ARR = 1000 - 1;
 
-	// Enable TIM2 interrupt
-	TIM2->DIER |= (0b1 << 0);
-	TIM2->EGR |= (1 << 0);
+	// Dozvola prekida brojaca
+	TIM1->DIER |= (0b1 << 0);
+	TIM1->EGR |= (1 << 0);
+	// Enable brojac
+	TIM1->CR1 |= (0b1 << 0);
+	TIM1->CR1 |= (1 << 2);
 
-	// Enable counter
-	TIM2->CR1 |= (0b1 << 0);
-	TIM2->CR1 |= (1 << 2); //interrupt only on overflow/underflow
+	while(! (TIM1->SR & (1 << 0)));
 
-	while(! (TIM2->SR & (1 << 0)));
-
-	unsigned int vec_pos = 28;
-
-	// TIM2 interrupt vector table: position 28
-	NVIC->ISER[(int)(vec_pos/32)] |= (0b1 << (vec_pos % 32));
+	NVIC->ISER[0] |= (1 << 25);
 }
 
 void TIMER_delay(unsigned int ms)
@@ -62,33 +44,33 @@ void TIMER_delay(unsigned int ms)
 
 void TIMER_timeout(unsigned int ms)
 {
-	if (timer_flags.flg_timeout_start == 0)
-	{
-		timer_flags.flg_timeout_start = 1;
-		timer_flags.flg_timeout_end = 0;
-		timeout_ms = ms;
-	}
+	if(timer_flags.flg_timeoutStart == 0)
+			{
+				timeout_ms = ms;
+				timer_flags.flg_timeoutStart = 1;
+				timer_flags.flg_timeoutEnd = 0;
+			}
 }
 
-void TIM2_IRQHandler()
+void TIM1_UP_TIM10_IRQHandler()
 {
-	if ( (TIM2->SR & (0b1 << 0)) == (0b1 << 0) )
-	{
-		// Code block
-		system_ms++;
-
-		if (timer_flags.flg_timeout_start == 1 && (timeout_ms > 0))
+	if((TIM1->SR & (0b1 << 0)) == 0b1)
 		{
-			timeout_ms--;
-		}
-		else if(timer_flags.flg_timeout_start == 1 && timeout_ms == 0)
-		{
-			timer_flags.flg_timeout_end = 1;
-			timer_flags.flg_timeout_start = 0;
-		}
+			system_ms++;
 
-		// reset UIF bit
-		TIM2->SR &= ~(0b1 << 0);
+			if (system_ms % 10 == 0)
+				Odom_update(10);
 
-	}
+			if(timer_flags.flg_timeoutStart == 1 && (timeout_ms > 0))
+			{
+				timeout_ms--;
+			}
+			if(timer_flags.flg_timeoutStart == 1 && timeout_ms == 0)
+			{
+				timer_flags.flg_timeoutEnd = 1;
+				timer_flags.flg_timeoutStart = 0;
+			}
+
+			TIM1->SR &= ~(0b1 << 0);
+		}
 }

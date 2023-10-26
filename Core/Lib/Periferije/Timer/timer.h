@@ -14,12 +14,10 @@ typedef struct
 {
 	unsigned char flg_100s : 1;
 	unsigned char flg_90s : 1;
+	unsigned char flg_LED : 1;
 
-	unsigned char flg_1s : 1;
-
-	unsigned char flg_timeout_start : 1;
-	unsigned char flg_timeout_end : 1;
-
+	unsigned char flg_timeoutStart : 1;
+	unsigned char flg_timeoutEnd : 1;
 }sTimerFlags_t;
 
 volatile sTimerFlags_t timer_flags;
