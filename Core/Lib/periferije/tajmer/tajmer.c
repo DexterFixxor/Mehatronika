@@ -12,10 +12,22 @@
 static void
 tim2_init ();
 
+volatile uint32_t sistemsko_vreme = 0;
+
 void
 tajmer_init()
 {
   tim2_init();
+}
+
+void
+tajmer_delay (uint32_t ms)
+{
+  uint32_t pocetno_vreme = sistemsko_vreme;
+  while(sistemsko_vreme <= pocetno_vreme + ms)
+    {
+      __NOP();
+    }
 }
 
 static void
@@ -46,7 +58,22 @@ tim2_init ()
 
   TIM2->CR1 |= (0b1 << 2);
 
-  // TODO: Odabir prekidne rutine
+  uint8_t const TIM2_PREKID = 28;
+  NVIC->ISER[0] |= (0b1 << TIM2_PREKID);
 
   TIM2->CR1 |= (0b1 << 0); // Uključivanje tajmera
+}
+
+void
+TIM2_IRQHandler ()
+{
+  // Prekidna rutina koja se poziva na svaku ms
+  if ((TIM2->SR & (0b1 << 0)) == (0b1 << 0))
+    {
+      // Sami čistimo bit, da bi sledeći put mogli da detektujemo prekid
+      TIM2->SR &= ~(0b1 << 0);
+
+      sistemsko_vreme ++;
+    }
+
 }

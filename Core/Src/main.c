@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "../Lib/periferije/io/io.h"
+#include "../Lib/periferije/tajmer/tajmer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -87,6 +88,9 @@ main (void)
   /* Initialize all configured peripherals */
   /* USER CODE BEGIN 2 */
   io_init();
+  tajmer_init();
+
+  __enable_irq();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -95,6 +99,10 @@ main (void)
   for (;;)
     {
       io_led(true);
+      tajmer_delay(1000);
+
+      io_led(false);
+      tajmer_delay(1000);
 
       /* USER CODE END WHILE */
 
