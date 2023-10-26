@@ -32,11 +32,13 @@ void Odom_update(unsigned int dt)
 	/*
 	 * dt: parametar u milisekundama
 	 */
+	float dt_sec = dt / 1000.; // sec
+
 	int enc_desni = Encoder1_GetDeltaInc(); // pomeraj u inkrementima
 	int enc_levi = Encoder2_GetDeltaInc();
 
-	float v_r = enc_desni * INC_2_RAD * WHEEL_RADIUS; 	// [m/s]
-	float v_d = enc_levi * INC_2_RAD * WHEEL_RADIUS;		// [m/s]
+	float v_r = enc_desni * INC_2_RAD * WHEEL_RADIUS / dt_sec; 	// [m/s]
+	float v_d = enc_levi * INC_2_RAD * WHEEL_RADIUS / dt_sec;		// [m/s]
 
 	float v = (v_r + v_d)/2;
 	float w = (v_r - v_d)/WHEEL_DISTANCE;
@@ -47,9 +49,9 @@ void Odom_update(unsigned int dt)
 	 * Po kinematskom modelu diferencijalnog robota je moguce i
 	 * (theta[k] + theta[k+1])/2, odnosno srednja vrednost
 	 */
-	odom->pose->x += v * cos(odom->pose->theta + w/2);
-	odom->pose->y += v * sin(odom->pose->theta + w/2);
-	odom->pose->theta += w; // theta[k+1] = theta[k] + w
+	odom->pose->x += v * cos(odom->pose->theta + w/2) * dt_sec;
+	odom->pose->y += v * sin(odom->pose->theta + w/2) * dt_sec;
+	odom->pose->theta += w * dt_sec; // theta[k+1] = theta[k] + w
 
 	odom->vel->linear = v;
 	odom->vel->angular = w;
