@@ -87,22 +87,78 @@ main (void)
 
   /* Initialize all configured peripherals */
   /* USER CODE BEGIN 2 */
-  io_init();
-  tajmer_init();
+  io_init ();
+  tajmer_init ();
 
-  __enable_irq();
+  __enable_irq ();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  uint8_t stanje = 0;
+  bool flage_fsm = true;
+  uint32_t cekanje = 0;
+
   //while (1)
   for (;;)
     {
-      io_led(true);
-      tajmer_delay(1000);
+      //io_led(true);
+      //tajmer_delay(1000);
 
-      io_led(false);
-      tajmer_delay(1000);
+      //io_led(false);
+      //tajmer_delay(1000);
+
+      switch (stanje)
+	{
+	case 0:
+	  // inicijalizaicija stanja
+	  // telo stanja
+	  io_led (true);
+	  // uslov prelaska
+	  stanje++;
+	  break;
+
+	case 1:
+	  // inicijalizaicija stanja
+	  if (flage_fsm == true)
+	    {
+	      cekanje = 1000;
+	      flage_fsm = false;
+	    }
+	  // telo stanja
+
+	  // uslov prelaska
+	  if (tajmer_delay_nb (cekanje) == true)
+	    {
+	      stanje++;
+	      flage_fsm = true;
+	    }
+	  break;
+
+	case 2:
+	  io_led (false);
+	  stanje++;
+	  break;
+
+	case 3:
+	  // inicijalizaicija stanja
+	  if (flage_fsm == true)
+	    {
+	      cekanje = 1000;
+	      flage_fsm = false;
+	    }
+	  // telo stanja
+
+	  // uslov prelaska
+	  if (tajmer_delay_nb (cekanje) == true)
+	    {
+	      stanje = 0;
+	      flage_fsm = true;
+	    }
+	  break;
+
+	}
 
       /* USER CODE END WHILE */
 

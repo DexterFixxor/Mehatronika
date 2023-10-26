@@ -8,11 +8,13 @@
 #include "tajmer.h"
 
 #include "stm32f4xx.h"
+#include <stdbool.h>
 
 static void
 tim2_init ();
 
 volatile uint32_t sistemsko_vreme = 0;
+bool flag_delay = true;
 
 void
 tajmer_init()
@@ -23,10 +25,32 @@ tajmer_init()
 void
 tajmer_delay (uint32_t ms)
 {
-  uint32_t pocetno_vreme = sistemsko_vreme;
-  while(sistemsko_vreme <= pocetno_vreme + ms)
+  uint32_t pocetno_vreme1 = sistemsko_vreme;
+  while(sistemsko_vreme <= pocetno_vreme1 + ms)
     {
       __NOP();
+    }
+}
+
+bool
+tajmer_delay_nb (uint32_t ms)
+{
+  static uint32_t pocetno_vreme;
+
+  if (flag_delay == true)
+    {
+      pocetno_vreme = sistemsko_vreme;
+      flag_delay = false;
+    }
+
+  if(sistemsko_vreme <= pocetno_vreme + ms)
+    {
+      return false;
+    }
+  else
+    {
+      flag_delay = true;
+      return true;
     }
 }
 
