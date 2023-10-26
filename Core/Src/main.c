@@ -20,11 +20,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Periferije//GPIO/led.h"
 #include "Periferije/Timer/timer.h"
+#include "Periferije/Encoder/encoder.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -67,6 +67,7 @@ int main(void)
 {
 	/* USER CODE BEGIN 1 */
 	unsigned int stanje = 0; // 0 - ugasi 1 - upali
+	int cntDesni, cntLevi;
 	/* USER CODE END 1 */
 
 
@@ -78,6 +79,7 @@ int main(void)
 	/* USER CODE BEGIN Init */
 	LED_init();
 	TIMER_init();
+	Encoders_Init();
 	/* USER CODE END Init */
 
 	/* Configure the system clock */
@@ -93,42 +95,15 @@ int main(void)
 
 	/* USER CODE END 2 */
 
-
-
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-	timer_flags.flg_timeout_start = 0;
-	timer_flags.flg_timeout_end = 0;
 	while (1)
 	{
+		cntLevi = EncoderLeft_GetDeltaInc();
+		cntDesni = EncoderRight_GetDeltaInc();
 
 
-		switch(stanje)
-		{
-		case 0:
-			if (timer_flags.flg_timeout_start == 0)
-				TIMER_timeout(1000);
-
-			if (timer_flags.flg_timeout_end == 1) {
-				GPIOA->ODR &= ~(0b1 << 5);
-				stanje = 1;
-			}
-			break;
-
-		case 1:
-
-
-			if (timer_flags.flg_timeout_start == 0)
-				TIMER_timeout(1000);
-
-			if (timer_flags.flg_timeout_end == 1) {
-				GPIOA->ODR |= (0b1 << 5);
-				stanje = 0;
-			}
-			break;
-
-		}
-
+		HAL_Delay(100);
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
