@@ -7,6 +7,8 @@
 
 #include "tajmer.h"
 
+#include "../../moduli/odometrija/odometrija.h"
+
 #include "stm32f4xx.h"
 #include <stdbool.h>
 
@@ -156,7 +158,8 @@ TIM2_IRQHandler ()
       // Sami čistimo bit, da bi sledeći put mogli da detektujemo prekid
       TIM2->SR &= ~(0b1 << 0);
 
-      brzina_test = tajmer_brzina_enkodera();
+      //brzina_test = tajmer_brzina_enkodera();
+      odometrija_robot ();
 
       sistemsko_vreme++;
     }

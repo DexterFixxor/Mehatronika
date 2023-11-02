@@ -23,6 +23,9 @@
 /* USER CODE BEGIN Includes */
 #include "../Lib/periferije/io/io.h"
 #include "../Lib/periferije/tajmer/tajmer.h"
+#include "../Lib/periferije/uart/uart.h"
+
+#include "../Lib/moduli/odometrija/odometrija.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -89,6 +92,9 @@ main (void)
   /* USER CODE BEGIN 2 */
   io_init ();
   tajmer_init ();
+  uart_init ();
+
+  odometrija_init ();
 
   __enable_irq ();
   /* USER CODE END 2 */
