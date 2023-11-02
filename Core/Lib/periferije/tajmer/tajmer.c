@@ -12,21 +12,25 @@
 
 static void
 tim2_init ();
+static void
+tim3_init ();
 
 volatile uint32_t sistemsko_vreme = 0;
 bool flag_delay = true;
+volatile int16_t brzina_test = 0;
 
 void
-tajmer_init()
+tajmer_init ()
 {
-  tim2_init();
+  tim2_init ();
+  tim3_init ();
 }
 
 void
 tajmer_delay (uint32_t ms)
 {
   uint32_t pocetno_vreme1 = sistemsko_vreme;
-  while(sistemsko_vreme <= pocetno_vreme1 + ms)
+  while (sistemsko_vreme <= pocetno_vreme1 + ms)
     {
       __NOP();
     }
@@ -43,7 +47,7 @@ tajmer_delay_nb (uint32_t ms)
       flag_delay = false;
     }
 
-  if(sistemsko_vreme <= pocetno_vreme + ms)
+  if (sistemsko_vreme <= pocetno_vreme + ms)
     {
       return false;
     }
@@ -95,8 +99,8 @@ tim3_init ()
   RCC->APB1ENR |= (0b1 << 1); // Dozvola takta za TIM3
 
   // Podešavanje pinova
-  uint8_t const KANAL_A = 4;
-  uint8_t const KANAL_B = 5;
+  uint8_t const KANAL_A = 4; // PB4
+  uint8_t const KANAL_B = 5; // PB5
 
   // Podešavanje pinova da rade kao alternativna funkcija
   GPIOB->MODER &= ~(0b11 << 2 * KANAL_A);
@@ -135,6 +139,14 @@ tim3_init ()
   TIM3->CR1 |= (0b1 << 0); // Uključivanje tajmera
 }
 
+int16_t
+tajmer_brzina_enkodera ()
+{
+  int16_t brzina = TIM3->CNT;
+  TIM3->CNT = 0;
+  return brzina;
+}
+
 void
 TIM2_IRQHandler ()
 {
@@ -144,7 +156,9 @@ TIM2_IRQHandler ()
       // Sami čistimo bit, da bi sledeći put mogli da detektujemo prekid
       TIM2->SR &= ~(0b1 << 0);
 
-      sistemsko_vreme ++;
+      brzina_test = tajmer_brzina_enkodera();
+
+      sistemsko_vreme++;
     }
 
 }

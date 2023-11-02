@@ -17,5 +17,7 @@ void
 tajmer_delay (uint32_t ms);
 bool
 tajmer_delay_nb (uint32_t);
+int16_t
+tajmer_brzina_enkodera ();
 
 #endif /* LIB_PERIFERIJE_TAJMER_TAJMER_H_ */
