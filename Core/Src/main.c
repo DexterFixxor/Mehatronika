@@ -26,7 +26,10 @@
 #include "Periferije/GPIO/led.h"
 #include "Periferije/Timer/timer.h"
 #include "Periferije/Encoder/encoder.h"
+
+#include "Periferije/UART/uart.h"
 #include "Moduli/Odometrija/odom.h"
+#include "Periferije/PWM/servo.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -70,6 +73,16 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	int cnt1 = 0;
 	int cnt2 = 0;
+	unsigned char msg[] = {
+			0xFF,
+			0xFF,
+			5,
+			4, // length
+			0x03, //instruction
+			25, // LED dioda
+			1, // param 1
+			~(5 + 4 + 1)
+	};
   /* USER CODE END 1 */
   
 
@@ -83,6 +96,8 @@ int main(void)
   Timer_Init();
   Encoders_Init();
   Odom_init(0, 0, 0);
+  UART2_Init();
+  PWM_ServoInit();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -102,9 +117,21 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  float ms = 1.5;
+
   while (1)
   {
+
 	  //Odom_update() moved to TIM IRQ
+//	  USART2_EchoMsg();
+//	  USART2_SendArray(msg, (unsigned int)(sizeof(msg)/sizeof(msg[0])));
+	  for (float i = 1; i <= 2; i += 0.001)
+	  {
+		  TIM10->CCR1 = (unsigned int)(i/20 * 3999);
+		  HAL_Delay(10);
+	  }
+
 
     /* USER CODE END WHILE */
 
