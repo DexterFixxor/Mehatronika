@@ -26,6 +26,8 @@
 #include "Periferije/Timer/timer.h"
 #include "Periferije/Encoder/encoder.h"
 #include "Modules/Odom/odom.h"
+#include "Periferije/UART/uart.h"
+#include "Modules/Dynamixel/ax.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -77,10 +79,11 @@ int main(void)
 	HAL_Init();
 
 	/* USER CODE BEGIN Init */
-	LED_init();
-//	TIMER_init();
-	Encoders_Init();
-	Odom_init(0, 0, 0);
+	//	LED_init();
+	////	TIMER_init();
+	//	Encoders_Init();
+	//	Odom_init(0, 0, 0);
+	UART1_Init();
 	/* USER CODE END Init */
 
 	/* Configure the system clock */
@@ -94,15 +97,21 @@ int main(void)
 	MX_GPIO_Init();
 	/* USER CODE BEGIN 2 */
 
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		Odom_update(100);
+		AX_Move(6,  0);
+		HAL_Delay(100);
+
+		AX_Move(6, 30);
+
 		HAL_Delay(100);
 		/* USER CODE END WHILE */
+
 
 		/* USER CODE BEGIN 3 */
 	}
