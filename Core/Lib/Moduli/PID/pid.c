@@ -25,15 +25,15 @@ void PID_Init(sPID_t* pid, float Kp, float Ki, float Kd, float outMin, float out
 void PID_ComputeOutput(sPID_t* pid, float ref, float measured, float prev_measured)
 {
 	pid->error[0] = ref - measured;
-	pid->output +=
+	pid->out +=
 			pid->Kp * (measured - prev_measured) +
 			pid->Ki * pid->error[0] +
 			pid->Kd * (pid->error[0] - 2 * pid->error[1] + pid->error[2]);
 
-	if(pid->output > pid->outMax)
-		pid->output = pid->outMax;
-	else if(pid->output < pid->outMin)
-		pid->output = pid->outMin;
+	if(pid->out > pid->outMax)
+		pid->out = pid->outMax;
+	else if(pid->out < pid->outMin)
+		pid->out = pid->outMin;
 
 	pid->error[2] = pid->error[1];
 	pid->error[1] = pid->error[0];
