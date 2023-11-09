@@ -106,6 +106,24 @@ main (void)
   bool flage_fsm = true;
   uint32_t cekanje = 0;
 
+  uint8_t ledon[] =
+    { 0xff, 0xff, 0x01, 0x04, 0x03, 0x19, 0x01, 0xDD };
+  uint8_t ledoff[] =
+    { 0xff, 0xff, 0x01, 0x04, 0x03, 0x19, 0x00, 0xDE };
+
+  uint8_t move1[] =
+    { 0xff, 0xff, 0x01, 0x05, 0x03, 0x1E, 0x00, 0x00, 0xD8 };
+  uint8_t move2[] =
+    { 0xff, 0xff, 0x01, 0x05, 0x03, 0x1E, 0xff, 0x03, 0xD6 };
+
+  uint8_t ping[] =
+    { 0xff, 0xff, 0x01, 0x02, 0x01, 0xfb };
+
+  uint8_t ledon_b[] =
+    { 0xff, 0xff, 0xfe, 0x04, 0x03, 0x19, 0x01, 0xE0 };
+  uint8_t ledoff_b[] =
+    { 0xff, 0xff, 0xfe, 0x04, 0x03, 0x19, 0x00, 0xE1 };
+
   //while (1)
   for (;;)
     {
@@ -114,57 +132,71 @@ main (void)
 
       //io_led(false);
       //tajmer_delay(1000);
+      /*
+       switch (stanje)
+       {
+       case 0:
+       // inicijalizaicija stanja
+       // telo stanja
+       io_led (true);
+       // uslov prelaska
+       stanje++;
+       break;
 
-      switch (stanje)
+       case 1:
+       // inicijalizaicija stanja
+       if (flage_fsm == true)
+       {
+       cekanje = 1000;
+       flage_fsm = false;
+       }
+       // telo stanja
+
+       // uslov prelaska
+       if (tajmer_delay_nb (cekanje) == true)
+       {
+       stanje++;
+       flage_fsm = true;
+       }
+       break;
+
+       case 2:
+       io_led (false);
+       stanje++;
+       break;
+
+       case 3:
+       // inicijalizaicija stanja
+       if (flage_fsm == true)
+       {
+       cekanje = 1000;
+       flage_fsm = false;
+       }
+       // telo stanja
+
+       // uslov prelaska
+       if (tajmer_delay_nb (cekanje) == true)
+       {
+       stanje = 0;
+       flage_fsm = true;
+       }
+       break;
+
+       }
+       */
+      //uart_send_byte('a');
+      //tajmer_delay(1000);
+      for (uint8_t i = 0; i < sizeof(ledon_b) / sizeof(*ledon_b); i++)
+       {
+       uart_send_byte (ledon_b[i]);
+       }
+       tajmer_delay (1000);
+
+      for (uint8_t i = 0; i < sizeof(ledoff_b) / sizeof(*ledoff_b); i++)
 	{
-	case 0:
-	  // inicijalizaicija stanja
-	  // telo stanja
-	  io_led (true);
-	  // uslov prelaska
-	  stanje++;
-	  break;
-
-	case 1:
-	  // inicijalizaicija stanja
-	  if (flage_fsm == true)
-	    {
-	      cekanje = 1000;
-	      flage_fsm = false;
-	    }
-	  // telo stanja
-
-	  // uslov prelaska
-	  if (tajmer_delay_nb (cekanje) == true)
-	    {
-	      stanje++;
-	      flage_fsm = true;
-	    }
-	  break;
-
-	case 2:
-	  io_led (false);
-	  stanje++;
-	  break;
-
-	case 3:
-	  // inicijalizaicija stanja
-	  if (flage_fsm == true)
-	    {
-	      cekanje = 1000;
-	      flage_fsm = false;
-	    }
-	  // telo stanja
-
-	  // uslov prelaska
-	  if (tajmer_delay_nb (cekanje) == true)
-	    {
-	      stanje = 0;
-	      flage_fsm = true;
-	    }
-	  break;
-
+	  uart_send_byte (ledoff_b[i]);
 	}
+      tajmer_delay (1000);
 
       /* USER CODE END WHILE */
 
