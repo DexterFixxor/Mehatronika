@@ -186,7 +186,7 @@ main (void)
        */
       //uart_send_byte('a');
       //tajmer_delay(1000);
-      for (uint8_t i = 0; i < sizeof(ledon_b) / sizeof(*ledon_b); i++)
+      /*for (uint8_t i = 0; i < sizeof(ledon_b) / sizeof(*ledon_b); i++)
        {
        uart_send_byte (ledon_b[i]);
        }
@@ -196,7 +196,12 @@ main (void)
 	{
 	  uart_send_byte (ledoff_b[i]);
 	}
-      tajmer_delay (1000);
+      tajmer_delay (1000);*/
+
+      TIM5->CCR1 = 1000;
+      tajmer_delay (2000);
+      TIM5->CCR1 = 2000;
+      tajmer_delay (2000);
 
       /* USER CODE END WHILE */
 

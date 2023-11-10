@@ -16,6 +16,8 @@ static void
 tim2_init ();
 static void
 tim3_init ();
+static void
+tim5_init ();
 
 volatile uint32_t sistemsko_vreme = 0;
 bool flag_delay = true;
@@ -26,6 +28,7 @@ tajmer_init ()
 {
   tim2_init ();
   tim3_init ();
+  tim5_init ();
 }
 
 void
@@ -139,6 +142,69 @@ tim3_init ()
   TIM3->CCER &= ~((0b1 << 5) | (0b1 << 7)); // neinvertovanje kanala 2
 
   TIM3->CR1 |= (0b1 << 0); // Uključivanje tajmera
+}
+
+static void
+tim5_init ()
+{
+  RCC->AHB1ENR |= (0b1 << 0);
+  RCC->APB1ENR |= (0b1 << 3);
+
+  uint8_t const KANAL1 = 0; // PA0
+  uint8_t const KANAL2 = 1; // PA1
+  uint8_t const KANAL3 = 2; // PA2
+  uint8_t const KANAL4 = 3; // PA3
+
+  GPIOA->MODER &= ~(0b11 << KANAL1 * 2);
+  GPIOA->MODER &= ~(0b11 << KANAL2 * 2);
+  GPIOA->MODER &= ~(0b11 << KANAL3 * 2);
+  GPIOA->MODER &= ~(0b11 << KANAL4 * 2);
+  GPIOA->MODER |= (0b10 << KANAL1 * 2);
+  GPIOA->MODER |= (0b10 << KANAL2 * 2);
+  GPIOA->MODER |= (0b10 << KANAL3 * 2);
+  GPIOA->MODER |= (0b10 << KANAL4 * 2);
+
+  uint8_t const AF = 2;
+
+  GPIOA->AFR[KANAL1 / 8] &= ~(0xF << (KANAL1 % 8) * 4);
+  GPIOA->AFR[KANAL2 / 8] &= ~(0xF << (KANAL2 % 8) * 4);
+  GPIOA->AFR[KANAL3 / 8] &= ~(0xF << (KANAL3 % 8) * 4);
+  GPIOA->AFR[KANAL4 / 8] &= ~(0xF << (KANAL4 % 8) * 4);
+  GPIOA->AFR[KANAL1 / 8] |= (AF << (KANAL1 % 8) * 4);
+  GPIOA->AFR[KANAL2 / 8] |= (AF << (KANAL2 % 8) * 4);
+  GPIOA->AFR[KANAL3 / 8] |= (AF << (KANAL3 % 8) * 4);
+  GPIOA->AFR[KANAL4 / 8] |= (AF << (KANAL4 % 8) * 4);
+
+  // Željena frekvencija za DC motor: 20kHz
+  //TIM5->PSC = 0;
+  //TIM5->ARR = 4200 - 1;
+  // Željena frekvencija za RC servo motor: 50Hz
+  TIM5->PSC = 84 - 1;
+  TIM5->ARR = 20000 - 1;
+
+  // Podešavanje "PWM mode 1"
+  TIM5->CCMR1 &= ~(0b111 << 4);
+  TIM5->CCMR1 |= (0b110 << 4);
+
+  TIM5->CCMR1 |= (0b1 << 3);
+  TIM5->CR1 |= (0b1 << 7);
+
+  TIM5->CR1 &= ~(0b1 << 1); // Dozvola događaja
+  TIM5->CR1 &= ~(0b1 << 2); // Šta generiše događaj
+  TIM5->EGR |= (0b1 << 0); // Reinicijalizacija tajmera
+  while (!(TIM5->SR & (0b1 << 0)))
+    {
+      __NOP();
+    }
+  TIM5->SR &= ~(0b1 << 0);
+
+  // Uključujemo kanal PWM-a
+  TIM5->CCER |= (0b1 << 0);
+
+  // Uključivanje tajmera
+  TIM5->CR1 |= (0b1 << 0);
+
+  //TIM5->CCR1 = 1000;
 }
 
 int16_t
