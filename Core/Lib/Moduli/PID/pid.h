@@ -19,11 +19,13 @@ typedef struct
 	float outMin;
 	float outMax;
 	float out;
+
+	float prevMeasured;
 }sPID_t;
 
 volatile sPID_t *pid;
 
 void PID_Init(sPID_t* pid, float Kp, float Ki, float Kd, float outMin, float outMax);
-void PID_ComputeOutput(sPID_t* pid, float ref, float measured, float prev_measured);
+void PID_ComputeOutput(sPID_t* pid, float ref, float measured);
 
 #endif /* LIB_MODULI_PID_PID_H_ */

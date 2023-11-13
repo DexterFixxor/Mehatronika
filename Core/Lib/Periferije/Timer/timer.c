@@ -8,7 +8,7 @@
 
 #include "timer.h"
 #include "Moduli/Odometrija/odom.h"
-
+#include "Moduli/Robot/robot.h"
 volatile unsigned int system_ms = 0;
 volatile unsigned int timeout_ms = 0;
 volatile sTimerFlags_t timer_flags;
@@ -58,8 +58,14 @@ void TIM1_UP_TIM10_IRQHandler()
 		{
 			system_ms++;
 
-			if (system_ms % 10 == 0)
-				Odom_update(10);
+			if (system_ms % 20 == 0)
+			{
+				Odom_update(20);
+				Robot_PositionControlLoop();
+			}
+			if (system_ms % 5 == 0)
+				Motor_controlLoop();
+
 
 			if(timer_flags.flg_timeoutStart == 1 && (timeout_ms > 0))
 			{
