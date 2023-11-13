@@ -28,6 +28,9 @@
 #include "Modules/Odom/odom.h"
 #include "Periferije/UART/uart.h"
 #include "Modules/Dynamixel/ax.h"
+
+#include "Periferije/PWM/pwm.h"
+#include "Modules/H_bridge/h_bridge.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -83,7 +86,9 @@ int main(void)
 	////	TIMER_init();
 	//	Encoders_Init();
 	//	Odom_init(0, 0, 0);
-	UART1_Init();
+//	UART1_Init();
+	Motor1_PWM_Init();
+	HBridge_Init();
 	/* USER CODE END Init */
 
 	/* Configure the system clock */
@@ -102,14 +107,18 @@ int main(void)
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
+
+	HBridge_SetDir(CW);
+	Motor1_PWM_Duc(50);
+
 	while (1)
 	{
-		AX_Move(6,  0);
-		HAL_Delay(100);
-
-		AX_Move(6, 30);
-
-		HAL_Delay(100);
+//		AX_Move(6,  0);
+//		HAL_Delay(100);
+//
+//		AX_Move(6, 30);
+//
+//		HAL_Delay(100);
 		/* USER CODE END WHILE */
 
 
