@@ -18,5 +18,6 @@ typedef enum
 void HBridge_Init();
 void HBridge_Enable();
 void HBridge_SetDir(const eDirection_t dir);
+void HBridge_SetPWM(const int duc);
 
 #endif /* LIB_MODULES_H_BRIDGE_H_BRIDGE_H_ */

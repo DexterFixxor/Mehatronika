@@ -87,8 +87,8 @@ int main(void)
 	//	Encoders_Init();
 	//	Odom_init(0, 0, 0);
 //	UART1_Init();
-	Motor1_PWM_Init();
-	HBridge_Init();
+//	Motor1_PWM_Init();
+//	HBridge_Init();
 	/* USER CODE END Init */
 
 	/* Configure the system clock */
@@ -102,14 +102,13 @@ int main(void)
 	MX_GPIO_Init();
 	/* USER CODE BEGIN 2 */
 
-
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-
-	HBridge_SetDir(CW);
-	Motor1_PWM_Duc(50);
+//
+//	HBridge_SetDir(CW);
+//	Motor1_PWM_Duc(50);
 
 	while (1)
 	{

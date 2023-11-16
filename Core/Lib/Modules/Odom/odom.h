@@ -37,6 +37,9 @@ typedef struct
 {
 	sPose_t* pose;
 	sVelocity_t* vel;
+
+	float w_r;
+	float w_l;
 }sOdom_t;
 
 extern volatile sOdom_t* odom;

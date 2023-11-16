@@ -7,7 +7,7 @@
 
 #include "pid.h"
 
-volatile sPID_t *pid;
+volatile sPID_t *pid_motor1;
 
 void PID_Init(sPID_t* pid, float Kp, float Kd, float Ki, float outMax, float outMin)
 {

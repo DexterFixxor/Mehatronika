@@ -7,6 +7,7 @@
 
 
 #include "h_bridge.h"
+#include "Periferije/PWM/pwm.h"
 #include <stm32f4xx.h>
 
 
@@ -51,5 +52,24 @@ void HBridge_SetDir(const eDirection_t dir)
 		GPIOA->ODR &= ~(0b1 << 8);
 		GPIOA->ODR |=  (0b1 << 9);
 		break;
+	}
+}
+
+void HBridge_SetPWM(const int duc)
+{
+	if (duc < 0)
+	{
+		HBridge_SetDir(CCW);
+		Motor1_PWM_Duc((unsigned int)(-duc));
+	}
+	else if(duc > 0)
+	{
+		HBridge_SetDir(CW);
+		Motor1_PWM_Duc((unsigned int)(duc));
+	}
+	else
+	{
+		HBridge_SetDir(STOP);
+		Motor1_PWM_Duc(0);
 	}
 }

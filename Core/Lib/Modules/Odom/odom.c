@@ -34,8 +34,11 @@ void Odom_update(unsigned int delta_ms)
 	int enc_l = EncoderLeft_GetDeltaInc();
 
 	// INC * RAD/INC * 1/s * m
-	float v_r = enc_r * INC_2_RAD * WHEEL_R / dt_sec;
-	float v_l = enc_l * INC_2_RAD * WHEEL_R / dt_sec;
+	odom->w_r = enc_r * INC_2_RAD / dt_sec;
+	odom->w_l = enc_l * INC_2_RAD / dt_sec;
+
+	float v_r = odom->w_r * WHEEL_R;
+	float v_l = odom->w_l * WHEEL_R;
 
 	float v = (v_r + v_l)/2;
 	float w = (v_r - v_l)/WHEEL_DISTANCE;
@@ -43,7 +46,7 @@ void Odom_update(unsigned int delta_ms)
 	odom->vel->v = v;
 	odom->vel->w = w;
 
-	odom->pose->x += v * cos(odom->pose->theta + (w/2)) * dt_sec;
-	odom->pose->y += v * sin(odom->pose->theta + (w/2)) * dt_sec;
+	odom->pose->x += v * cos(odom->pose->theta + (w*dt_sec/2)) * dt_sec;
+	odom->pose->y += v * sin(odom->pose->theta + (w*dt_sec/2)) * dt_sec;
 	odom->pose->theta += w * dt_sec;
 }

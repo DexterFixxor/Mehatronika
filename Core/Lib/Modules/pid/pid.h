@@ -23,7 +23,7 @@ typedef struct
 	float prev_measure;
 }sPID_t;
 
-volatile extern sPID_t *pid;
+volatile extern sPID_t *pid_motor1;
 
 void PID_Init(sPID_t* pid, float Kp, float Kd, float Ki, float outMax, float outMin);
 void PID_ComputeOutput(sPID_t* pid, float ref, float measure);
